@@ -135,7 +135,7 @@
         <br>
         <div class="row">
             <button id="botonComprobar" type="button" class="btn btn-block btn-primary"
-                onclick="chequeaRespuesta(columna)">Comprobar</button>
+                onclick="chequeaRespuesta(columna),guardarKuki(_nivelParaKuki,marcadorKuki);">Comprobar</button>
         </div>
         <br>
         <div class="row">
@@ -166,7 +166,8 @@
         var alternativa = "";
         var auxiliar = [];
         var chequeDobleVerbo = 0;
-        var miKukiNombre = "nivel";
+        var _nivelParaKuki = "nivel" + nivel;
+        var marcadorKuki;
         let arrayAuxiliar = [["was", "were"],
         ["learnt", "learnd"]
         ];
@@ -176,14 +177,15 @@
         function dameNumeroDeVerbos(_nivel) {
 
             nivel = _nivel;
+            leerKuki(nivel);
             document.getElementById("visible").style.display = "none";
             document.getElementById("oculto").style.display = "inherit";
             dameNivel(nivel);
-            console.log("en el dameverbos" + _nivelParaKuki)
             eligeVerbo();
             chequeaRespuesta(columna, nivel);
-            var _nivelParaKuki = "nivel" + nivel;
-            console.log(_nivelParaKuki)
+            _nivelParaKuki = "nivel" + nivel;
+            
+
 
 
 
@@ -192,6 +194,7 @@
             document.getElementById('miNivel').innerHTML = 'Nivel: ' + nivel;
         }
         //cheque respuesta
+        
         function chequeaRespuesta(columna) {
             if (jugando == 0) {
                 jugando = 1;
@@ -205,6 +208,10 @@
                     document.getElementById('botonComprobar').innerText = "Ooh it's correct!!!";
                     marcador++;
                     auxiliar = id;
+                    marcadorKuki = marcador;
+                    console.log("==============>" + marcadorKuki)
+
+
 
                 } else {
 
@@ -223,6 +230,8 @@
                 document.getElementById('botonComprobar').classList.add('btn-primary');
                 document.getElementById('botonComprobar').innerText = "Comprobar";
                 jugando = 0;
+                marcadorKuki = marcador;
+                console.log("==============>" + marcadorKuki)
 
                 eligeVerbo(nivel);
             }
@@ -268,7 +277,33 @@
 
 
         }
-        
+        //guardo kuki aqui
+        function guardarKuki(_nivelParaKuki, marcadorKuki) {
+            nombre = _nivelParaKuki;
+            valor = marcadorKuki;
+            fecha = "31 Dec 2020 23:59:59 GMT";
+            document.cookie = nombre + "=" + valor + ";expires=" + fecha;
+        }
+        //leo kuki aqui
+        function leerKuki(nivel) {
+            misCookie = document.cookie;
+            contenidoCookie = misCookie.split('; ');
+            for (i in contenidoCookie) {
+                var arrayAuxiliar = contenidoCookie[i].split('=');
+                var nivelObtenido = arrayAuxiliar[0].substring(5);
+                var marcadorObtenido = arrayAuxiliar[1];
+                console.log("nivelobtenido:_ " + nivelObtenido + ";" + "marcadorObtenido:_ " + marcadorObtenido);
+                if(nivel==nivelObtenido){
+                    console.log("hurrrrrra!")
+                    marcador=marcadorObtenido;
+                }
+
+            }
+
+        }
+        //leerKuki();
+
+        guardarKuki(_nivelParaKuki, marcadorKuki);
         function cambiaNivel() {
             location.reload();
         }
